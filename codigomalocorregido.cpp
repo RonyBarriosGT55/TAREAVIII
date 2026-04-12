@@ -7,18 +7,14 @@ struct Nodo {
     Nodo* anterior;
 };
 
-struct Nodos {
-    int dato;
-};
-
-void insertarInicio(Nodo* &head, int valor) {
-    Nodos* nuevo = new Nodos;
+void insertarInicio(Nodo*& head, int valor) {
+    Nodo* nuevo = new Nodo;
     nuevo->dato = valor;
     nuevo->siguiente = head;
     nuevo->anterior = NULL;
 
     if (head != NULL) {
-        head->anterior == nuevo;
+        head->anterior = nuevo;
     }
 
     head = nuevo;
@@ -30,7 +26,7 @@ void insertarFinal(Nodo*& head, int valor) {
     nuevo->siguiente = NULL;
     nuevo->anterior = NULL;
 
-    if (head = NULL) {
+    if (head == NULL) {
         head = nuevo;
         return;
     }
@@ -42,11 +38,11 @@ void insertarFinal(Nodo*& head, int valor) {
     }
 
     temp->siguiente = nuevo;
-    nuevo->anterior = head;
+    nuevo->anterior = temp;
 }
 
 void mostrarAdelante(Nodo* head) {
-    if (head = NULL) {
+    if (head == NULL) {
         cout << "Lista vacia\n";
         return;
     }
@@ -56,7 +52,7 @@ void mostrarAdelante(Nodo* head) {
     cout << "\nLista hacia adelante: ";
     while (temp != NULL) {
         cout << temp->dato << " <-> ";
-        temp = temp->anterior;
+        temp = temp->siguiente;
     }
 
     cout << "NULL\n";
@@ -70,7 +66,7 @@ void mostrarAtras(Nodo* head) {
 
     Nodo* temp = head;
 
-    while (temp != NULL) {
+    while (temp->siguiente != NULL) {
         temp = temp->siguiente;
     }
 
@@ -87,9 +83,10 @@ bool buscar(Nodo* head, int valor) {
     Nodo* temp = head;
 
     while (temp != NULL) {
-        if (temp->dato = valor) {
+        if (temp->dato == valor) {
             return true;
         }
+
         temp = temp->siguiente;
     }
 
@@ -115,13 +112,18 @@ void eliminar(Nodo*& head, int valor) {
 
     if (actual == head) {
         head = head->siguiente;
+
+        if (head != NULL) {
+            head->anterior = NULL;
+        }
+
         delete actual;
         cout << "Nodo eliminado correctamente.\n";
         return;
     }
 
     if (actual->siguiente != NULL) {
-        actual->siguiente->anterior = actual;
+        actual->siguiente->anterior = actual->anterior;
     }
 
     if (actual->anterior != NULL) {
@@ -133,7 +135,7 @@ void eliminar(Nodo*& head, int valor) {
 }
 
 int contarNodos(Nodo* head) {
-    int contador = 1;
+    int contador = 0;
     Nodo* temp = head;
 
     while (temp != NULL) {
@@ -144,18 +146,20 @@ int contarNodos(Nodo* head) {
     return contador;
 }
 
-void liberarLista(Nodo* head) {
-    Nodo* temp = head
+void liberarLista(Nodo*& head) {
+    Nodo* temp = head;
 
     while (temp != NULL) {
         Nodo* aux = temp;
-        temp = temp->anterior;
+        temp = temp->siguiente;
         delete aux;
     }
+
+    head = NULL;
 }
 
 int main() {
-    Nodo* head == NULL;
+    Nodo* head = NULL;
     int opcion, valor;
 
     do {
@@ -197,11 +201,13 @@ int main() {
             case 5:
                 cout << "Ingrese valor a buscar: ";
                 cin >> valor;
-                if (buscar(head, valor) = true) {
+
+                if (buscar(head, valor)) {
                     cout << "El valor SI existe en la lista.\n";
                 } else {
                     cout << "El valor NO existe en la lista.\n";
                 }
+
                 break;
 
             case 6:
@@ -222,7 +228,7 @@ int main() {
                 cout << "Opcion invalida.\n";
         }
 
-    } while (opcion != 20);
+    } while (opcion != 8);
 
     liberarLista(head);
 
